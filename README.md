@@ -13,6 +13,11 @@ It is for people searching things like:
 
 This is not the old keyboard rebind workaround. That path was removed from this repo because it was a gameplay workaround and could interfere with normal online play. This repo now ships the real pointer fix instead.
 
+Direct download:
+
+- [Download the DMG](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/download/v2.0.0/PEAK-CrossOver-Mouse-Fix-v2.0.0.dmg)
+- [Release page](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/tag/v2.0.0)
+
 ## What this fixes
 
 Use this if all or most of these are true:
