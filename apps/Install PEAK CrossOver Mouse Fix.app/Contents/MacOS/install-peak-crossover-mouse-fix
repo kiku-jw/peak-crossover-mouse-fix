@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+
+APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_ROOT="$(cd "$APP_DIR/../../.." && pwd)"
+SCRIPT_PATH="$REPO_ROOT/scripts/install-crossover-pointer-fix.sh"
+
+/usr/bin/osascript <<OSA
+tell application "Terminal"
+  activate
+  do script "bash " & quoted form of "$SCRIPT_PATH"
+end tell
+OSA

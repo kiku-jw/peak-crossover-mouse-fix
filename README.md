@@ -1,187 +1,171 @@
-# PEAK Mouse Not Working in CrossOver on macOS: Left Click, Right Click, and Menu Fix
+# PEAK Mouse Not Working in CrossOver on macOS: Real Unity Pointer Fix
 
-This repository is a practical workaround for the `PEAK` mouse bug in `CrossOver` on `macOS`, especially when the game cursor moves but the UI does not react to hover or click, and the left mouse button does nothing in-game.
+This repository fixes the real `PEAK` mouse bug in `CrossOver` on `macOS` by patching the CrossOver Wine layer that breaks Unity pointer input.
 
-It is aimed at searches like:
+It is for people searching things like:
 
 - `PEAK mouse not working CrossOver`
 - `PEAK left click not working macOS`
+- `PEAK right click not working CrossOver`
 - `PEAK menu not clickable CrossOver`
-- `EnableMouseInPointer failed PEAK`
-- `Unity 6 mouse bug CrossOver macOS`
+- `Unity 6 EnableMouseInPointer failed`
+- `CrossOver mouse buttons not working in PEAK`
+
+This is not the old keyboard rebind workaround. That path was removed from this repo because it was a gameplay workaround and could interfere with normal online play. This repo now ships the real pointer fix instead.
 
 ## What this fixes
 
-This workaround is for the specific situation where:
+Use this if all or most of these are true:
 
 - the mouse cursor moves in `PEAK`
-- menu buttons do not highlight
-- menu buttons do not click
-- in-game camera look may still work
-- left click does nothing in gameplay
+- the menu does not react to hover or click
+- left click or right click does nothing in-game
+- camera look may still work
 - `Player.log` contains `EnableMouseInPointer failed with the following error: Call not implemented.`
 
-## What this repo does
+After a successful install, a fresh `Player.log` should no longer contain that line.
 
-The main install script:
+## What this repo patches
 
-- installs `BepInEx` for `PEAK`
-- installs `PEAK Unbound`
-- writes the required `winhttp` Wine DLL overrides
-- forces an `en_US` locale in the bottle environment
-- remaps broken mouse actions to keyboard keys
-- installs a bundled `PeakMenuKeyboard.dll` plugin that tries to bypass the broken menu by auto-invoking PEAK menu actions
+The installer replaces these three CrossOver app-level files:
 
-## Current keybind workaround
+- `user32.dll`
+- `win32u.dll`
+- `win32u.so`
 
-- `F` = primary action / left mouse button
-- `G` = secondary action / right mouse button
-- `Enter` = menu click / submit
-- `E` = interact / also confirm in some menus
-- `Q` = drop
-- `X` = scroll backward
+Those are the pieces that control the broken `EnableMouseInPointer` path used by newer Unity builds.
 
-## Tested target
+The repo includes:
 
-This was built around the problem case:
+- a one-shot installer script
+- a restore script with automatic backups
+- Finder-friendly `.app` wrappers for install and restore
+- prebuilt payload files for `CrossOver 25.1.1`
+- the source patch diff used for the fix
+
+## Supported target
+
+This repo is currently packaged for:
 
 - `PEAK`
-- `CrossOver 26.0`
+- `CrossOver 25.1.1`
 - `macOS`
 - `Unity 6`
-- broken mouse path with `EnableMouseInPointer failed`
 
-It may also help on nearby CrossOver/Wine builds with the same symptom pattern.
+The installer validates the exact stock hashes before replacing anything. If your CrossOver files are different, the installer stops instead of overwriting unknown binaries.
 
 ## Quick start
 
-1. Clone this repository.
-2. Open Terminal in the repo folder.
-3. Run:
+1. Download or clone this repository.
+2. Keep the `.app` bundles inside the repo folder.
+3. Double-click [Install PEAK CrossOver Mouse Fix.app](apps/Install%20PEAK%20CrossOver%20Mouse%20Fix.app).
+4. Let the Terminal installer finish.
+5. Fully quit `CrossOver` and `Steam`.
+6. Start `Steam` again.
+7. Launch `PEAK` with `DirectX 11` or add the launch option:
 
-```bash
-chmod +x peak_install_keyboard_workaround.sh
-./peak_install_keyboard_workaround.sh
+```text
+-force-d3d11
 ```
 
-4. Fully restart `Steam` and `PEAK`.
-5. Wait 10 to 15 seconds on the main menu.
-6. If the menu is still stubborn, try:
+## Command-line install
 
-- `F6` to force `Play Solo`
-- `F5` to force `Play` / continue
-- `Enter` to submit
-
-## Manual scripts
-
-### `peak_install_keyboard_workaround.sh`
-
-The main one-shot installer. This is what most people should run.
-
-It:
-
-- installs `BepInEx`
-- installs `PEAK Unbound`
-- installs the bundled `PeakMenuKeyboard.dll`
-- writes `HKCU\Software\Wine\DllOverrides\winhttp = native,builtin`
-- writes `HKCU\Software\Wine\AppDefaults\PEAK.exe\DllOverrides\winhttp = native,builtin`
-- writes keyboard remaps for `PEAK`
-
-### `peak_crossover_fix.sh`
-
-Bottle triage and cleanup helper. Useful if you want to:
-
-- inspect the bottle
-- force `PEAK` into windowed mode
-- reset locale values
-- clear the `LocalLow/LandCrab/PEAK` cache
-
-### `build_peak_menu_keyboard.sh`
-
-Rebuilds the bundled menu plugin from source with CrossOver's wine-mono C# compiler.
+If you prefer Terminal:
 
 ```bash
-chmod +x build_peak_menu_keyboard.sh
-./build_peak_menu_keyboard.sh --install
+bash scripts/install-crossover-pointer-fix.sh
 ```
 
-## Files in this repo
+To restore the latest backup:
 
-- `peak_install_keyboard_workaround.sh` - one-shot workaround installer
-- `peak_crossover_fix.sh` - bottle cleanup and diagnostic helper
-- `PeakMenuKeyboard.cs` - source for the menu auto-start / menu bypass plugin
-- `build_peak_menu_keyboard.sh` - rebuild script for the menu plugin
-- `dist/PeakMenuKeyboard.dll` - prebuilt plugin binary
+```bash
+bash scripts/restore-crossover-pointer-fix.sh --latest
+```
 
-## How the menu workaround works
+## Backup and restore
 
-The bundled `PeakMenuKeyboard` plugin does two things:
+Before patching, the installer creates a backup in:
 
-1. It provides keyboard-driven fallback behavior for broken UI situations.
-2. It patches PEAK menu entry points directly and attempts to call real menu methods such as:
+```text
+~/Library/Application Support/PEAK-CrossOver-Mouse-Fix/backups/<timestamp>
+```
 
-- `MainMenu.PlaySoloClicked`
-- `MainMenuMainPage.PlayClicked`
-- `MainMenuPlayPage.PlayClicked`
+To restore with Finder, double-click [Restore PEAK CrossOver Mouse Fix.app](apps/Restore%20PEAK%20CrossOver%20Mouse%20Fix.app).
 
-That matters because some PEAK menus are not plain Unity buttons anymore, so generic UI navigation alone is not enough.
+## How to verify the fix
+
+Launch `PEAK`, then inspect:
+
+```text
+~/Library/Application Support/CrossOver/Bottles/Steam/drive_c/users/crossover/AppData/LocalLow/LandCrab/PEAK/Player.log
+```
+
+You want to see:
+
+- `Forcing GfxDevice: Direct3D 11`
+- `Input initialized.`
+
+You do not want to see:
+
+- `EnableMouseInPointer failed with the following error: Call not implemented.`
+
+## Why this works
+
+The underlying problem is a missing or stubbed `EnableMouseInPointer` path in Wine/CrossOver for the newer Unity input stack used by `PEAK`.
+
+This repo applies the actual pointer-layer fix instead of:
+
+- remapping mouse buttons to keys
+- injecting BepInEx menu hacks
+- modifying gameplay behavior
+- patching game files in ways that can affect multiplayer behavior
+
+## Repo layout
+
+- [scripts/install-crossover-pointer-fix.sh](scripts/install-crossover-pointer-fix.sh) - install the supported payload with backup
+- [scripts/restore-crossover-pointer-fix.sh](scripts/restore-crossover-pointer-fix.sh) - restore the latest or chosen backup
+- [apps/Install PEAK CrossOver Mouse Fix.app](apps/Install%20PEAK%20CrossOver%20Mouse%20Fix.app) - Finder launcher for install
+- [apps/Restore PEAK CrossOver Mouse Fix.app](apps/Restore%20PEAK%20CrossOver%20Mouse%20Fix.app) - Finder launcher for restore
+- [patches/unity-enable-mouse-in-pointer.patch](patches/unity-enable-mouse-in-pointer.patch) - source-level patch diff
+- [payload/crossover-25.1.1](payload/crossover-25.1.1) - supported prebuilt payload files
 
 ## Troubleshooting
 
-### Check whether BepInEx loaded
+### Installer says the current files are unsupported
 
-After launching `PEAK`, inspect:
+Your CrossOver build is not the exact stock layout this repo expects. Do not force it. Wait for a matching package or rebuild the payload for your version.
 
-`BepInEx/LogOutput.log`
+### PEAK still does not react to clicks
 
-You want to see lines like:
+Make sure you are launching the DirectX 11 path:
 
-- `Loading [Peak Menu Keyboard ...]`
-- `Plugin PeakUnbound is loaded!`
+- choose `DirectX 11` if Steam prompts you
+- or set `-force-d3d11`
 
-### Check whether the underlying bug is still there
+Then check `Player.log` again.
 
-Inspect:
+### CrossOver was updated after installing
 
-`AppData/LocalLow/LandCrab/PEAK/Player.log`
+CrossOver updates can replace the patched files. Run the installer again, or restore first and then install the matching package for the new version.
 
-If you still see:
+## Safety notes
 
-`EnableMouseInPointer failed with the following error: Call not implemented.`
+- This repo patches `CrossOver.app`, not just one bottle.
+- The installer makes backups automatically.
+- The installer refuses unknown app-level hashes.
+- The game stays vanilla; this is not a gameplay mod.
 
-that usually means the upstream CrossOver/Unity mouse path is still broken, and this repo is acting as a workaround, not a real root fix.
+## Licensing
 
-### If the main menu still will not move
-
-Try this exact sequence:
-
-1. Close `Steam` and `PEAK`.
-2. Launch again.
-3. Wait 10 to 15 seconds on the menu.
-4. Press `F6`.
-5. If needed, press `F5`.
-6. Use `Enter` to submit and `F` / `G` in gameplay.
-
-## Known limitation
-
-This does not repair the upstream mouse bug inside CrossOver/Wine. It works around it.
-
-If a newer `CrossOver Preview` or stable build fixes the underlying Unity mouse regression, that is the cleaner long-term answer.
+- Repo scripts and docs: MIT
+- Patched Wine-derived payload details: see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
 
 ## Not affiliated
 
 This repository is unofficial and is not affiliated with:
 
 - `PEAK`
-- `Aggro Crab`
 - `Landfall`
+- `Aggro Crab`
 - `CodeWeavers`
 - `CrossOver`
-
-## License
-
-MIT
-
-## Search keywords
-
-PEAK mouse not working, PEAK left click not working, PEAK right click not working, PEAK menu not clickable, PEAK CrossOver fix, CrossOver 26 mouse bug, Unity 6 EnableMouseInPointer failed, PEAK macOS workaround, Wine mouse bug PEAK, BepInEx PEAK fix.

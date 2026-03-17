@@ -3,3 +3,7 @@
 *.tmp
 *.swp
 __pycache__/
+*.orig
+*.bak
+backups/
+dist/
