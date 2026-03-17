@@ -15,8 +15,8 @@ This is not the old keyboard rebind workaround. That path was removed from this 
 
 Direct download:
 
-- [Download the DMG](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/download/v2.0.0/PEAK-CrossOver-Mouse-Fix-v2.0.0.dmg)
-- [Release page](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/tag/v2.0.0)
+- [Download the DMG](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/download/v2.1.0/PEAK-CrossOver-Mouse-Fix-v2.1.0.dmg)
+- [Release page](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/tag/v2.1.0)
 
 ## What this fixes
 
@@ -45,7 +45,7 @@ The repo includes:
 - a one-shot installer script
 - a restore script with automatic backups
 - Finder-friendly `.app` wrappers for install and restore
-- prebuilt payload files for `CrossOver 25.1.1`
+- prebuilt payload files for `CrossOver 25.1.1` and `CrossOver 26.0`
 - the source patch diff used for the fix
 
 ## Supported target
@@ -54,6 +54,7 @@ This repo is currently packaged for:
 
 - `PEAK`
 - `CrossOver 25.1.1`
+- `CrossOver 26.0`
 - `macOS`
 - `Unity 6`
 
@@ -133,6 +134,7 @@ This repo applies the actual pointer-layer fix instead of:
 - [apps/Restore PEAK CrossOver Mouse Fix.app](apps/Restore%20PEAK%20CrossOver%20Mouse%20Fix.app) - Finder launcher for restore
 - [patches/unity-enable-mouse-in-pointer.patch](patches/unity-enable-mouse-in-pointer.patch) - source-level patch diff
 - [payload/crossover-25.1.1](payload/crossover-25.1.1) - supported prebuilt payload files
+- [payload/crossover-26.0](payload/crossover-26.0) - supported prebuilt payload files
 
 ## Troubleshooting
 
@@ -152,6 +154,12 @@ Then check `Player.log` again.
 ### CrossOver was updated after installing
 
 CrossOver updates can replace the patched files. Run the installer again, or restore first and then install the matching package for the new version.
+
+### PEAK still will not launch
+
+If you previously used mod-specific Steam launch commands, remove them first and test vanilla launch again.
+
+This repo fixes the Unity pointer bug. It does not depend on BepInEx, PEAKUnlimited, or old keyboard/menu workarounds.
 
 ## Safety notes
 

@@ -10,6 +10,7 @@ echo "CrossOver app: $CROSSOVER_APP_PATH"
 echo "CrossOver version: $(crossover_version)"
 
 ensure_layout
+echo "Supported payload: CrossOver $PAYLOAD_VERSION"
 
 backup_dir=""
 if [[ "${1:-}" == "--latest" || $# -eq 0 ]]; then

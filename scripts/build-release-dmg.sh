@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-VERSION="${1:-v2.0.0}"
+VERSION="${1:-v2.1.0}"
 PRODUCT_NAME="PEAK CrossOver Mouse Fix"
 DMG_BASENAME="PEAK-CrossOver-Mouse-Fix-${VERSION}"
 DIST_DIR="$REPO_ROOT/dist"
