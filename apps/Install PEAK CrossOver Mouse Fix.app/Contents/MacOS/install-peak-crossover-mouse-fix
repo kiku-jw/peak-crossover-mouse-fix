@@ -4,10 +4,13 @@ set -euo pipefail
 APP_CONTENTS_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 APP_BUNDLE_DIR="$(cd "$APP_CONTENTS_DIR/.." && pwd)"
 CONTAINER_DIR="$(cd "$APP_BUNDLE_DIR/.." && pwd)"
+EMBEDDED_SUPPORT_ROOT="$APP_CONTENTS_DIR/Resources/Support"
 SUPPORT_ROOT="$CONTAINER_DIR/Support"
 REPO_ROOT="$(cd "$APP_CONTENTS_DIR/../../.." && pwd)"
 
-if [[ -f "$SUPPORT_ROOT/scripts/install-crossover-pointer-fix.sh" ]]; then
+if [[ -f "$EMBEDDED_SUPPORT_ROOT/scripts/install-crossover-pointer-fix.sh" ]]; then
+  RUN_ROOT="$EMBEDDED_SUPPORT_ROOT"
+elif [[ -f "$SUPPORT_ROOT/scripts/install-crossover-pointer-fix.sh" ]]; then
   RUN_ROOT="$SUPPORT_ROOT"
 else
   RUN_ROOT="$REPO_ROOT"

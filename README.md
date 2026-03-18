@@ -15,8 +15,8 @@ This is not the old keyboard rebind workaround. That path was removed from this 
 
 Direct download:
 
-- [Download the DMG](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/download/v2.1.0/PEAK-CrossOver-Mouse-Fix-v2.1.0.dmg)
-- [Release page](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/tag/v2.1.0)
+- [Download the DMG](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/download/v2.1.1/PEAK-CrossOver-Mouse-Fix-v2.1.1.dmg)
+- [Release page](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/tag/v2.1.1)
 
 ## What this fixes
 
@@ -63,12 +63,13 @@ The installer validates the exact stock hashes before replacing anything. If you
 ## Quick start
 
 1. Download or clone this repository.
-2. Keep the `.app` bundles inside the repo folder.
-3. Double-click [Install PEAK CrossOver Mouse Fix.app](apps/Install%20PEAK%20CrossOver%20Mouse%20Fix.app).
-4. Let the Terminal installer finish.
-5. Fully quit `CrossOver` and `Steam`.
-6. Start `Steam` again.
-7. Launch `PEAK` with `DirectX 11` or add the launch option:
+2. Open the DMG.
+3. You can run the installer `.app` directly from the DMG, or move it anywhere you want.
+4. Double-click [Install PEAK CrossOver Mouse Fix.app](apps/Install%20PEAK%20CrossOver%20Mouse%20Fix.app).
+5. Let the Terminal installer finish.
+6. Fully quit `CrossOver` and `Steam`.
+7. Start `Steam` again.
+8. Launch `PEAK` with `DirectX 11` or add the launch option:
 
 ```text
 -force-d3d11
@@ -97,6 +98,11 @@ Before patching, the installer creates a backup in:
 ```
 
 To restore with Finder, double-click [Restore PEAK CrossOver Mouse Fix.app](apps/Restore%20PEAK%20CrossOver%20Mouse%20Fix.app).
+
+If `.app` launching is blocked or behaves strangely on your Mac, the DMG also includes:
+
+- `Install PEAK CrossOver Mouse Fix.command`
+- `Restore PEAK CrossOver Mouse Fix.command`
 
 ## How to verify the fix
 
