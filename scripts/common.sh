@@ -5,15 +5,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 CROSSOVER_APP_PATH="${CROSSOVER_APP_PATH:-/Applications/CrossOver.app}"
-WINE_ROOT="$CROSSOVER_APP_PATH/Contents/SharedSupport/CrossOver/lib/wine"
+CROSSOVER_SUPPORT_ROOT="$CROSSOVER_APP_PATH/Contents/SharedSupport/CrossOver"
+WINE_ROOT="$CROSSOVER_SUPPORT_ROOT/lib/wine"
 STATE_ROOT="${STATE_ROOT:-$HOME/Library/Application Support/PEAK-CrossOver-Mouse-Fix}"
 BACKUP_ROOT="$STATE_ROOT/backups"
 PAYLOAD_ROOT=""
 PAYLOAD_VERSION=""
 
-TARGET_USER32="$WINE_ROOT/x86_64-windows/user32.dll"
-TARGET_WIN32U_DLL="$WINE_ROOT/x86_64-windows/win32u.dll"
-TARGET_WIN32U_SO="$WINE_ROOT/x86_64-unix/win32u.so"
+TARGET_USER32=""
+TARGET_WIN32U_DLL=""
+TARGET_WIN32U_SO=""
 
 PAYLOAD_USER32=""
 PAYLOAD_WIN32U_DLL=""
@@ -41,6 +42,24 @@ require_file() {
     echo "Missing file: $1" >&2
     exit 1
   fi
+}
+
+discover_target() {
+  local preferred="$1"
+  local pattern="$2"
+
+  if [[ -f "$preferred" ]]; then
+    printf '%s\n' "$preferred"
+    return
+  fi
+
+  find "$CROSSOVER_SUPPORT_ROOT" -type f -path "$pattern" | sort | head -n 1
+}
+
+resolve_targets() {
+  TARGET_USER32="$(discover_target "$WINE_ROOT/x86_64-windows/user32.dll" '*/x86_64-windows/user32.dll')"
+  TARGET_WIN32U_DLL="$(discover_target "$WINE_ROOT/x86_64-windows/win32u.dll" '*/x86_64-windows/win32u.dll')"
+  TARGET_WIN32U_SO="$(discover_target "$WINE_ROOT/x86_64-unix/win32u.so" '*/x86_64-unix/win32u.so')"
 }
 
 set_profile() {
@@ -95,6 +114,7 @@ resolve_profile() {
 
 ensure_layout() {
   resolve_profile
+  resolve_targets
   require_file "$TARGET_USER32"
   require_file "$TARGET_WIN32U_DLL"
   require_file "$TARGET_WIN32U_SO"

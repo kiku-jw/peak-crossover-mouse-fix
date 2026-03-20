@@ -15,8 +15,8 @@ This is not the old keyboard rebind workaround. That path was removed from this 
 
 Direct download:
 
-- [Download the DMG](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/download/v2.1.1/PEAK-CrossOver-Mouse-Fix-v2.1.1.dmg)
-- [Release page](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/tag/v2.1.1)
+- [Download the DMG](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/download/v2.1.2/PEAK-CrossOver-Mouse-Fix-v2.1.2.dmg)
+- [Release page](https://github.com/kiku-jw/peak-crossover-mouse-fix/releases/tag/v2.1.2)
 
 ## What this fixes
 

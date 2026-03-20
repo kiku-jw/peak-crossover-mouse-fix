@@ -11,6 +11,9 @@ echo "CrossOver version: $(crossover_version)"
 
 ensure_layout
 echo "Supported payload: CrossOver $PAYLOAD_VERSION"
+echo "Target user32: $TARGET_USER32"
+echo "Target win32u.dll: $TARGET_WIN32U_DLL"
+echo "Target win32u.so: $TARGET_WIN32U_SO"
 
 state="$(current_state)"
 case "$state" in
